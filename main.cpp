@@ -111,7 +111,7 @@ mpf_class get_k(mpf_class a){
 	if (get_cos(a) == 0){
 		mpf_class r;
 		r = 2;
-		r = get_pow(r, 20);
+		r = get_pow(r, 20);  // определяем бесконечность
 		return r;
 	}
 	return get_sin(a) / get_cos(a);
@@ -122,59 +122,84 @@ mpf_class get_k(mpf_class a){
 mpf_class get_len(mpf_class a){
 	mpf_class res; res = 0;
 
-	mpf_class x, y;
-	x = 0; y = 0;
 
 	mpf_class k;
 	k = get_k(a);
 
+
+	mpf_class x; x = 0;
+	mpf_class y; y = 0;
 	mpf_class y1; y1 = 0;
 	mpf_class x1; x1 = 0;
+
+	mpf_class new_value; new_value = 0;
+
+	int coll_count = 0;  // техническая информация(для проверки работоспособности алгоритма)
 
 	// TODO: добавить вычисление пройденного расстояния
 	do{
 		cout << x << " " << y << endl;
-		y1 = k * (0 - x) + y;
-		if (!(y1 != y)){
+
+		int coll_count = 0;
+
+		new_value = k * (0 - x) + y; 
+		if (!(y1 == y)){
+			cout << "round 1" << endl;
 			if ((0 < y1) && (y1 < 1)){
-				x = 0;
-				y = y1;
-				k = -k;
-				continue;
+				cout << "round 2" << endl;
+				x1 = 0;
+				y1 = new_value;
+				coll_count++;
 			}
 		}
 
-		y1 = k * (2 - x) + y;
-		if (!(y1 != y)){
+		new_value = k * (2 - x) + y;
+		if (!(y1 == y)){
+			cout << "round 1" << endl;
 			if ((0 < y1) && (y1 < 1)){
-				x = 2;
-				y = y1;
-				k = -k;
-				continue;
+				cout << "round 2" << endl;
+				x1 = 2;
+				y1 = new_value;
+				coll_count++;
 			}
 		}
 
-		x1 = (0 - y) / k + x;
-		if (!(x1 != x)){
+		// TODO: проверить деление на ноль
+		new_value = (0 - y) / k + x;
+		if (!(x1 == x)){
+			cout << "round 1" << endl;
 			if ((0 < x1) && (x1 < 2)){
-				x = x1;
-				y = 0;
-				k = -k;
-				continue;
+				cout << "round 2" << endl;
+				x1 = new_value;
+				y1 = 0;
+				coll_count++;
 			}
 		}
 
-		x1 = (1 - y) / k + x;
-		if (!(x1 != x)){
+		new_value = (1 - y) / k + x;
+		if (!(x1 == x)){
+			cout << "round 1" << endl;
 			if ((0 < x1) && (x1 < 2)){
-				x = x1;
-				y = 1;
-				k = -k;
-				continue;
+				cout << "round 2" << endl;
+				x1 = new_value;
+				y1 = 1;
+				coll_count++;
 			}
 		}
 
-		k = -k;
+		if (coll_count != 1){
+			cout << "ALERT: a = " << a << endl;
+		}
+
+
+		k = -k;  // меняем угол наклона луча
+
+		res += sqrt((x - x1) * (x - x1) + (y - y1) * (y - y1));  // суммируем пройденное расстояние
+
+		x = x1; y = y1;  // перемещаем бильярдный шар
+
+		cout << "ball set to x1 = " << x1 << ", y1 = " << y1 << endl;
+
 
 	}while(loose(x, y));
 
@@ -184,7 +209,7 @@ mpf_class get_len(mpf_class a){
 
 int main ()
 {
-    int n = 100, dn = 2;
+    int n = 100, dn = 1;
     
     mpf_class a, res;
     res = 0;
