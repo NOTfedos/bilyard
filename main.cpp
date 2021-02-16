@@ -6,6 +6,7 @@
 
 
 double PI = 3.141592653589793238462;
+double R = 0.025;
 
 using std::string;
 using std::cout;
@@ -84,27 +85,27 @@ mpf_class get_cos(mpf_class x){
 // Проверка на НЕпересечение с лузой
 bool loose(mpf_class x, mpf_class y){
 
-	if ((abs(x - 0) < 0.025) && (abs(y - 0) < 0.025)){
+	if ((abs(x - 0) < R) && (abs(y - 0) < R)){
 		return false;
 	}
 
-	if ((abs(x - 1) < 0.025) && (abs(y - 0) < 0.025)){
+	if ((abs(x - 1) < R) && (abs(y - 0) < R)){
 		return false;
 	}
 
-	if ((abs(x - 2) < 0.025) && (abs(y - 0) < 0.025)){
+	if ((abs(x - 2) < R) && (abs(y - 0) < R)){
 		return false;
 	}
 
-	if ((abs(x - 0) < 0.025) && (abs(y - 1) < 0.025)){
+	if ((abs(x - 0) < R) && (abs(y - 1) < R)){
 		return false;
 	}
 
-	if ((abs(x - 1) < 0.025) && (abs(y - 1) < 0.025)){
+	if ((abs(x - 1) < R) && (abs(y - 1) < R)){
 		return false;
 	}
 
-	if ((abs(x - 2) < 0.025) && (abs(y - 1) < 0.025)){
+	if ((abs(x - 2) < R) && (abs(y - 1) < R)){
 		return false;
 	}
 
@@ -211,9 +212,12 @@ mpf_class get_len(mpf_class a){
 
 int main ()
 {
-    int n = 1000, dn = 2;
+    int n = 100, dn = 2;
     
-    ofstream outf("output.txt");
+    ofstream outf;
+
+    outf.open("output_.txt");
+
     if (!outf){
     	return 1;
     }
@@ -238,6 +242,8 @@ int main ()
 	    outf << "| " << iter_count << " | N = " << n << " | " << setprecision(20) << res << endl;
 	    n *= dn;
 	}
+
+	outf.close();  // явно закрываем файл
 
 	int end = clock();
 	cout << "Calculating ended in " << (end - start) / CLOCKS_PER_SEC << " seconds" << endl;
