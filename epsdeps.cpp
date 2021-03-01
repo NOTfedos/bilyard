@@ -5,18 +5,20 @@
 #include <iomanip>
 
 
-const double PI = 3.141592653589793238462;
-double R = 0.020, R_end = 0.05, dR = 0.0005;
-
-const int n = 12800;
-
-
 using std::string;
 using std::cout;
 using std::endl;
 using std::ofstream;
 using std::setprecision;
 
+
+const double PI = 3.141592653589793238462;
+double R = 0.07, R_end = 0.2, dR = 0.0005, R_ball = 0.034;//R_ball = 0.034;
+
+const int n = 4096;
+
+
+const string output_filename("../data/output_eps2.txt");
 
 // Вычисление факториала целого числа
 long get_factorial(long x){
@@ -136,7 +138,6 @@ void get_len(mpf_class a, mpf_class &res_len, mpf_class &res_count){
 	mpf_class k;
 	k = get_k(a);
 
-	//cout << "Angle a = " << a << " k = " << k << endl;
 
 	if (k == 0){
 		res_len = 1;
@@ -145,58 +146,95 @@ void get_len(mpf_class a, mpf_class &res_len, mpf_class &res_count){
 	}
 
 
-	mpf_class x; x = 0;
-	mpf_class y; y = 0;
+	mpf_class x; x = R_ball;
+	mpf_class y; y = R_ball;
 	mpf_class y1; y1 = 0;
 	mpf_class x1; x1 = 0;
 
 	mpf_class new_value; new_value = 0;
 
+
+	int coll_count = 0;  // техническая информация(для проверки работоспособности алгоритма)
+
+
 	// TODO: добавить вычисление пройденного расстояния
 	do{
-		//cout << x << " " << y << " " << k << endl;
 
-		int coll_count = 0;  // техническая информация(для проверки работоспособности алгоритма)
+		//cout << x << " " << y << endl;
 
-		new_value = k * (0 - x) + y; 
-		if (!(new_value == y)){
-			if ((0 < new_value) && (new_value < 1)){
-				x1 = 0;
+		coll_count = 0;
+
+		// left border
+		new_value = k * (0 - x) + y + R_ball * k; 
+		if (x > R_ball){
+			if ((R_ball <= new_value) && (new_value <= (1 - R_ball))){
+				x1 = 0 + R_ball;
 				y1 = new_value;
+
+				// DEBUG
+				// if ((y1 <= R_ball) || (y1 >= (1 - R_ball))){
+				// 	cout << x1 << " " << y1 << " 1" << endl;
+				// }
+
 				coll_count++;
 			}
 		}
 
-		new_value = k * (2 - x) + y;
-		if (!(new_value == y)){
-			if ((0 < new_value) && (new_value < 1)){
-				x1 = 2;
+		// right border
+		new_value = k * (2 - x) + y - R_ball * k;
+		if (x < (2 - R_ball)){
+			if ((R_ball <= new_value) && (new_value <= (1 - R_ball))){
+				x1 = 2 - R_ball;
 				y1 = new_value;
+
+				// DEBUG
+				// if ((y1 <= R_ball) || (y1 >= (1 - R_ball))){
+				// 	cout << x1 << " " << y1 << " 2" << endl;
+				// }
+
 				coll_count++;
 			}
 		}
 
-		// TODO: проверить деление на ноль
-		new_value = (0 - y) / k + x;
-		if (!(new_value == x)){
-			if ((0 < new_value) && (new_value < 2)){
+		// bottom border
+		new_value = (0 - y) / k + x + R_ball / k;
+		if (y > R_ball){
+			if ((R_ball <= new_value) && (new_value <= (2 - R_ball))){
 				x1 = new_value;
-				y1 = 0;
+				y1 = 0 + R_ball;
+
+				// DEBUG
+				// if (!(R_ball < x1 < (2 - R_ball))){
+				// 	cout << x1 << " " << y1 << " 3" << endl;
+				// }
+
 				coll_count++;
 			}
 		}
 
-		new_value = (1 - y) / k + x;
-		if (!(new_value == x)){
-			if ((0 < new_value) && (new_value < 2)){
+		// top border
+		new_value = (1 - y) / k + x - R_ball / k;
+		if (y < (1 - R_ball)){
+			if ((R_ball <= new_value) && (new_value <= (2 - R_ball))){
 				x1 = new_value;
-				y1 = 1;
+				y1 = 1 - R_ball;
+
+				// DEBUG
+				// if (!(R_ball < x1 < (2 - R_ball))){
+				// 	cout << x1 << " " << y1 << " 4" << endl;
+				// }
+
 				coll_count++;
 			}
 		}
 
+
+		// если зарегали более одной точки столкновения со стенками
 		if (coll_count != 1){
-			cout << "ALERT: a = " << a << endl;
+			cout << "---------------------------------------------------" << endl;
+			cout << x << " " << y << endl;
+			cout << "ALERT: a = " << a << " COUNT" << coll_count << endl;
+			cout << "---------------------------------------------------" << endl;
 		}
 
 
@@ -209,7 +247,6 @@ void get_len(mpf_class a, mpf_class &res_len, mpf_class &res_count){
 
 		//cout << "ball set to x1 = " << x1 << ", y1 = " << y1 << endl;
 
-
 	}while(loose(x, y));
 }
 
@@ -217,7 +254,7 @@ void get_len(mpf_class a, mpf_class &res_len, mpf_class &res_count){
 int main ()
 {   
     ofstream outf;
-    outf.open("data/output_eps2.txt");
+    outf.open(output_filename);
 
     if (!outf){
     	return 1;
@@ -249,6 +286,7 @@ int main ()
 
 	int end = clock();
 	cout << "Calculating ended in " << (end - start) / CLOCKS_PER_SEC << " seconds" << endl;
+	cout << "Data writeen into " << output_filename << endl;
 
 	return 0;
 }
