@@ -1,5 +1,8 @@
 #include "fracnum.hpp"
+#include <iostream>
 
+using std::cout;
+using std::endl;
 
 int main(){
 	Fraction a = Fraction(1, 2);

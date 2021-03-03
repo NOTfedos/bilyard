@@ -1,4 +1,4 @@
-#pragma once
+//#pragma once
 
 
 #include <iostream>
@@ -56,7 +56,7 @@ public:
 		return this->y;
 	}
 
-	double get_double(){
+	double get_double() const{
 		return (double) this->x / (double) this->y;
 	}
 
