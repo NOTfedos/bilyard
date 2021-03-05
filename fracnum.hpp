@@ -1,6 +1,3 @@
-//#pragma once
-
-
 #include <iostream>
 
 using std::ostream;
@@ -63,35 +60,35 @@ public:
 	//-------------------------------------ДЕЙСТВИЯ НАД ОБЪЕКТАМИ-----------------------------
 
 	//-------------------------------------Сложение-------------------------------------------
-	friend const Fraction operator+(const Fraction& left, const Fraction& right){
+	friend Fraction operator+(const Fraction& left, const Fraction& right){
 		// проверить на переполнение!
 		return cut_frac(Fraction(left.get_x()*right.get_y() + left.get_y()*right.get_x(), left.get_y()*right.get_y()));
 	}
 
 
 	//-------------------------------------Вычитание------------------------------------------
-	friend Fraction operator-(const Fraction left, const Fraction right){
+	friend Fraction operator-(const Fraction& left, const Fraction& right){
 		// проверить на переполнение!
 		return cut_frac(Fraction(left.get_x()*right.get_y() - left.get_y()*right.get_x(), left.get_y()*right.get_y()));
 	}
 
 
 	//-------------------------------------Умножение на число----------------------------------
-	friend Fraction operator*(const Fraction left, long c){
+	friend Fraction operator*(const Fraction& left, long c){
 		// проверить на переполнение!
 		return cut_frac(Fraction(left.get_x() * c, left.get_y()));
 	}
 
 
 	//-------------------------------------Умножение на дробь----------------------------------
-	friend Fraction operator*(const Fraction left, const Fraction right){
+	friend Fraction operator*(const Fraction& left, const Fraction& right){
 		// проверить на переполнение!
 		return cut_frac(Fraction(left.get_x() * right.get_x(), left.get_y() * right.get_y()));
 	}
 
 
 	//-------------------------------------Деление на дробь------------------------------------
-	friend Fraction operator/(const Fraction left, const Fraction right){
+	friend Fraction operator/(const Fraction& left, const Fraction& right){
 		return cut_frac(Fraction(left.get_x() * right.get_y(), left.get_y() * right.get_x()));
 	}
 
@@ -102,8 +99,8 @@ public:
 		return *this;
 	}
 
-	//-------------------------------------Вывод-----------------------------------------------
-	friend ostream& operator<<(ostream& out, const Fraction frac){
+	//-------------------------------------Вывод (отладочный)-----------------------------------------------
+	friend ostream& operator<<(ostream& out, const Fraction& frac){
 		out << "f " << frac.get_x() << "/" << frac.get_y();
 		return out;
 	} 
