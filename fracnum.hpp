@@ -1,4 +1,6 @@
 #include <iostream>
+#include "fracnum.h"
+
 
 using std::ostream;
 
