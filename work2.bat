@@ -1,8 +1,9 @@
-g++ epsdeps.cpp -lgmpxx -lgmp -o ./bin/epsdeps.exe
+g++ .\src\epsdeps.cpp -lgmpxx -lgmp -o .\bin\epsdeps.exe
 pause
-cd ./bin/
+cd ./bin
 epsdeps.exe
-cd ../
 pause
-./data/output_eps.txt
+cd ../data
+output_eps.txt
+cd ../
 cls

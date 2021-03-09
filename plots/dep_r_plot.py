@@ -13,10 +13,14 @@ for line in rf:
     carr.append(c)
 
 xerr = [0.05 for _ in range(len(x))]
-plt.plot(x, y)
-#plt.plot(x, y)
-plt.xlabel('R, см')
-plt.ylabel('L, м')
-plt.title(f'Зависимость средней длины пробега L шара от радиуса Лузы R при N={int(n)}')
 
+fig, ax = plt.subplots()
+
+ax.errorbar(x, y)
+#plt.plot(x, y)
+ax.set_xlabel('R, см')
+ax.set_ylabel('L, м')
+ax.set_title(f'Зависимость средней длины пробега L шара от радиуса Лузы R при N={int(n)}')
+
+ax.grid()
 plt.show()
