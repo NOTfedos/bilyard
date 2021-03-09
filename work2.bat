@@ -4,6 +4,6 @@ cd ./bin
 epsdeps.exe
 pause
 cd ../data
-output_eps.txt
+output_eps2.txt
 cd ../
 cls
