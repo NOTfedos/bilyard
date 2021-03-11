@@ -4,6 +4,7 @@
 #include <iostream>
 
 using std::ostream;
+using std::min;
 
 
 
@@ -11,8 +12,6 @@ using std::ostream;
 class Fraction{
 public:
     Fraction(long x, long y =1);
-
-    static Fraction cut_frac(const Fraction frac);
 
     long get_x() const;
 
@@ -36,6 +35,8 @@ public:
 
 private:
     long x, y;
+
+    Fraction cut();
 };
 
 

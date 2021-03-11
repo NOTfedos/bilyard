@@ -32,13 +32,20 @@ long fast_pow(long x, int n){
 // Class Fraction
 
 Fraction::Fraction(long x, long y /*=1*/){
+
+	// Cutting in constructor
+	int c = 2;
+	while( (c <= min(x, y)) ){
+		if (((x % c) == 0) && ((y % c) == 0)){
+			x /= c;
+			y /= c;
+			c = 1;
+		}
+		c++;
+	};
+
     this->x = x;
     this->y = y;
-}
-
-Fraction Fraction::cut_frac(const Fraction frac){
-    // добавить сокращение дробей
-    return frac;
 }
 
 long Fraction::get_x() const{
@@ -56,30 +63,30 @@ double Fraction::get_double() const{
 //-------------------------------------Сложение-------------------------------------------
 Fraction operator+(const Fraction& left, const Fraction& right){
 	// проверить на переполнение!
-	return Fraction::cut_frac(Fraction(left.get_x()*right.get_y() + left.get_y()*right.get_x(), left.get_y()*right.get_y()));
+	return Fraction(left.get_x()*right.get_y() + left.get_y()*right.get_x(), left.get_y()*right.get_y()).cut();
 }
 
 //-------------------------------------Вычитание------------------------------------------
 Fraction operator-(const Fraction& left, const Fraction& right){
 	// проверить на переполнение!
-	return Fraction::cut_frac(Fraction(left.get_x()*right.get_y() - left.get_y()*right.get_x(), left.get_y()*right.get_y()));
+	return Fraction(left.get_x()*right.get_y() - left.get_y()*right.get_x(), left.get_y()*right.get_y()).cut();
 }
 
 //-------------------------------------Умножение на число----------------------------------
 Fraction operator*(const Fraction& left, long c){
 	// проверить на переполнение!
-	return Fraction::cut_frac(Fraction(left.get_x() * c, left.get_y()));
+	return Fraction(left.get_x() * c, left.get_y()).cut();
 }
 
 //-------------------------------------Умножение на дробь----------------------------------
 Fraction operator*(const Fraction& left, const Fraction& right){
 	// проверить на переполнение!
-	return Fraction::cut_frac(Fraction(left.get_x() * right.get_x(), left.get_y() * right.get_y()));
+	return Fraction(left.get_x() * right.get_x(), left.get_y() * right.get_y()).cut();
 }
 
 //-------------------------------------Деление на дробь------------------------------------
 Fraction operator/(const Fraction& left, const Fraction& right){
-	return Fraction::cut_frac(Fraction(left.get_x() * right.get_y(), left.get_y() * right.get_x()));
+	return Fraction(left.get_x() * right.get_y(), left.get_y() * right.get_x()).cut();
 }
 
 //-------------------------------------Возведение в целую степень--------------------------
@@ -94,3 +101,18 @@ ostream& operator<<(ostream& out, const Fraction& frac){
 	out << "f " << frac.get_x() << "/" << frac.get_y();
 	return out;
 } 
+
+Fraction Fraction::cut(){
+	// Cutting itself
+	int c = 2;
+	while( (c <= min(this->x, this->y)) ){
+		if (((this->x % c) == 0) && ((this->y % c) == 0)){
+			this->x /= c;
+			this->y /= c;
+			c = 1;
+		}
+		c++;
+	};
+
+	return *this;
+}
