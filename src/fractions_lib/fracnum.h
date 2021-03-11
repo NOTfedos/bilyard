@@ -11,6 +11,8 @@ using std::min;
 // Classes
 class Fraction{
 public:
+    Fraction();
+
     Fraction(long x, long y =1);
 
     long get_x() const;
@@ -36,7 +38,7 @@ public:
 private:
     long x, y;
 
-    Fraction cut();
+    Fraction& cut();
 };
 
 

@@ -1,5 +1,6 @@
 #include "fracnum.h"
 
+using std::overflow_error;
 
 // Functions
 
@@ -31,7 +32,17 @@ long fast_pow(long x, int n){
 
 // Class Fraction
 
+Fraction::Fraction(){
+	this->x = 0;
+	this->y = 1;
+}
+
 Fraction::Fraction(long x, long y /*=1*/){
+
+	// Zero denominator:
+	if (y == 0){
+		throw overflow_error("Zero denominator error");
+	}
 
 	// Cutting in constructor
 	int c = 2;
@@ -96,13 +107,13 @@ Fraction Fraction::pow(int n){
 	return *this;
 }
 
-//-------------------------------------Вывод (отладочный)-----------------------------------------------
+//-------------------------------------Вывод (отладочный)----------------------------------
 ostream& operator<<(ostream& out, const Fraction& frac){
-	out << "f " << frac.get_x() << "/" << frac.get_y();
+	out << frac.get_x() << "/" << frac.get_y();
 	return out;
 } 
 
-Fraction Fraction::cut(){
+Fraction& Fraction::cut(){
 	// Cutting itself
 	int c = 2;
 	while( (c <= min(this->x, this->y)) ){
