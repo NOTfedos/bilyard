@@ -6,4 +6,4 @@ Installing GMP library: https://qosys.info/cpp-gmp-windows
 
 **Для запуска**
 
-Необходимо запустить файл
+Необходимо запустить файл work2.bat
